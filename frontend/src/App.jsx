@@ -3,6 +3,7 @@ import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Leads from "./pages/Leads";
+import LeadDetails from "./pages/LeadDetails";
 
 function App() {
   return (
@@ -22,6 +23,14 @@ function App() {
           element={
             <ProtectedRoute>
               <Leads />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/leads/:id"
+          element={
+            <ProtectedRoute>
+              <LeadDetails />
             </ProtectedRoute>
           }
         />

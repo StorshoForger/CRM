@@ -1,31 +1,35 @@
 import { useState } from "react";
+import api from "../api/axios";
 import { useNavigate } from "react-router-dom";
 
-
-
 function Login() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+
   const navigate = useNavigate();
-  
-  const [formData, setFormData] = useState({
-    email: "",
-    password: "",
-  });
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-  };
-
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setError("");
 
-    localStorage.setItem("token", "loggedin");
+    try {
+      const response = await api.post("/auth/login", { email, password });
 
-    navigate("/dashboard");
+      const token = response.data.token;
+
+      // store JWT token
+      localStorage.setItem("token", token);
+
+      // redirect to dashboard
+      navigate("/dashboard");
+    } catch (err) {
+      if (err.response && err.response.data.error) {
+        setError(err.response.data.error);
+      } else {
+        setError("Login failed. Please try again.");
+      }
+    }
   };
 
   return (
@@ -36,21 +40,23 @@ function Login() {
       >
         <h2 className="text-white text-2xl mb-6 text-center">CRM Login</h2>
 
+        {error && (
+          <p className="text-red-400 mb-4 text-sm text-center">{error}</p>
+        )}
+
         <input
           type="email"
-          name="email"
           placeholder="Email"
-          value={formData.email}
-          onChange={handleChange}
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
           className="w-full mb-4 p-2 rounded bg-gray-700 text-white outline-none"
         />
 
         <input
           type="password"
-          name="password"
           placeholder="Password"
-          value={formData.password}
-          onChange={handleChange}
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
           className="w-full mb-6 p-2 rounded bg-gray-700 text-white outline-none"
         />
 
