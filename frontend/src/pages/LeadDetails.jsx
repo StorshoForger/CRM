@@ -16,7 +16,7 @@ function LeadDetails() {
 
       const response = await api.get(`/leads/${id}`);
 
-      setLead(response.data);
+      setLead(response.data.data);
 
     } catch (error) {
       console.error("Error fetching lead:", error);
