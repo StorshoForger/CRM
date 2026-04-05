@@ -24,11 +24,11 @@ function Login() {
       // redirect to dashboard
       navigate("/dashboard");
     } catch (err) {
-      if (err.response && err.response.data.error) {
-        setError(err.response.data.error);
-      } else {
-        setError("Login failed. Please try again.");
-      }
+      setError(
+        err.response?.data?.message ||
+          err.response?.data?.error ||
+          "Login failed. Please try again.",
+      );
     }
   };
 
